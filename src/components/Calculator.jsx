@@ -37,6 +37,7 @@ export default function Calculator() {
       setDisplay(digit)
       setWaitingForOperand(false)
     } else {
+      if (display.replace('-', '').replace('.', '').length >= 12) return
       setDisplay(display === '0' ? digit : display + digit)
     }
   }
@@ -91,11 +92,13 @@ export default function Calculator() {
   const handleSign = () => {
     if (display === '0' || display === 'Error') return
     setDisplay(display.startsWith('-') ? display.slice(1) : '-' + display)
+    setWaitingForOperand(true)
   }
 
   const handlePercent = () => {
     if (display === 'Error') return
     setDisplay(formatNum(parseFloat(display) / 100))
+    setWaitingForOperand(true)
   }
 
   const buttons = [
