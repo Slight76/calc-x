@@ -12,7 +12,6 @@ export default function App() {
     document.documentElement.setAttribute('data-theme', theme)
   }, [theme])
 
-  const toggleTheme = () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))
   const toggleMode = () => setMode((m) => (m === 'calculator' ? 'tip' : 'calculator'))
 
   return (
@@ -21,7 +20,7 @@ export default function App() {
         <span className="app-title">CALC-X</span>
         <div style={{ display: 'flex', gap: '8px' }}>
           <ModeToggle mode={mode} onToggle={toggleMode} />
-          <ThemeToggle theme={theme} onToggle={toggleTheme} />
+          <ThemeToggle theme={theme} onSelect={setTheme} />
         </div>
       </header>
       {mode === 'calculator' ? <Calculator /> : <TipCalculator />}
