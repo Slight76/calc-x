@@ -15,9 +15,9 @@ describe('App — rendering', () => {
     expect(screen.getByTitle('Toggle calculator mode')).toBeInTheDocument()
   })
 
-  it('renders theme toggle button', () => {
+  it('renders theme selector', () => {
     render(<App />)
-    expect(screen.getByTitle('Toggle theme')).toBeInTheDocument()
+    expect(screen.getByTitle('Select theme')).toBeInTheDocument()
   })
 
   it('renders Calculator by default', () => {
@@ -52,30 +52,37 @@ describe('App — mode toggle', () => {
   })
 })
 
-describe('App — theme toggle', () => {
-  it('theme toggle shows LIGHT in dark mode', () => {
+describe('App — theme selector', () => {
+  it('theme selector defaults to dark', () => {
     render(<App />)
-    expect(screen.getByTitle('Toggle theme')).toHaveTextContent('☀ LIGHT')
+    expect(screen.getByTitle('Select theme')).toHaveValue('dark')
   })
 
-  it('theme toggle shows DARK after toggling to light', () => {
-    render(<App />)
-    fireEvent.click(screen.getByTitle('Toggle theme'))
-    expect(screen.getByTitle('Toggle theme')).toHaveTextContent('☾ DARK')
-  })
-
-  it('toggles html data-theme attribute', () => {
+  it('changes html data-theme attribute to light', () => {
     render(<App />)
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark')
-    fireEvent.click(screen.getByTitle('Toggle theme'))
+    fireEvent.change(screen.getByTitle('Select theme'), { target: { value: 'light' } })
     expect(document.documentElement.getAttribute('data-theme')).toBe('light')
   })
 
-  it('toggles back to dark theme', () => {
+  it('changes html data-theme attribute to synthwave', () => {
     render(<App />)
-    fireEvent.click(screen.getByTitle('Toggle theme'))
-    fireEvent.click(screen.getByTitle('Toggle theme'))
+    fireEvent.change(screen.getByTitle('Select theme'), { target: { value: 'synthwave' } })
+    expect(document.documentElement.getAttribute('data-theme')).toBe('synthwave')
+  })
+
+  it('can switch back to dark theme', () => {
+    render(<App />)
+    fireEvent.change(screen.getByTitle('Select theme'), { target: { value: 'light' } })
+    fireEvent.change(screen.getByTitle('Select theme'), { target: { value: 'dark' } })
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark')
+  })
+
+  it('exposes all three theme options', () => {
+    render(<App />)
+    const select = screen.getByTitle('Select theme')
+    const values = Array.from(select.querySelectorAll('option')).map((o) => o.value)
+    expect(values).toEqual(['dark', 'light', 'synthwave'])
   })
 })
 
@@ -99,20 +106,21 @@ describe('ModeToggle — unit', () => {
 })
 
 describe('ThemeToggle — unit', () => {
-  it('shows "☀ LIGHT" in dark mode', () => {
-    render(<ThemeToggle theme="dark" onToggle={() => {}} />)
-    expect(screen.getByRole('button')).toHaveTextContent('☀ LIGHT')
+  it('renders current theme as selected value', () => {
+    render(<ThemeToggle theme="dark" onSelect={() => {}} />)
+    expect(screen.getByRole('combobox')).toHaveValue('dark')
   })
 
-  it('shows "☾ DARK" in light mode', () => {
-    render(<ThemeToggle theme="light" onToggle={() => {}} />)
-    expect(screen.getByRole('button')).toHaveTextContent('☾ DARK')
+  it('renders all three theme options', () => {
+    render(<ThemeToggle theme="dark" onSelect={() => {}} />)
+    const select = screen.getByRole('combobox')
+    expect(select.querySelectorAll('option')).toHaveLength(3)
   })
 
-  it('calls onToggle when clicked', () => {
-    let called = false
-    render(<ThemeToggle theme="dark" onToggle={() => { called = true }} />)
-    fireEvent.click(screen.getByRole('button'))
-    expect(called).toBe(true)
+  it('calls onSelect with new value when changed', () => {
+    let selected = null
+    render(<ThemeToggle theme="dark" onSelect={(v) => { selected = v }} />)
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'synthwave' } })
+    expect(selected).toBe('synthwave')
   })
 })
