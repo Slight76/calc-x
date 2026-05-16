@@ -1,0 +1,312 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Theme variables ─────────────────────────────────────────────────────── */
+
+[data-theme="dark"] {
+  --bg: #0a0e1a;
+  --surface: #111827;
+  --primary: #00f5ff;
+  --secondary: #bf00ff;
+  --text: #e0f7ff;
+  --text-dim: #6b8fa3;
+  --glow-primary: 0 0 10px #00f5ff, 0 0 30px #00f5ff55;
+  --glow-secondary: 0 0 10px #bf00ff, 0 0 30px #bf00ff55;
+  --primary-a55: #00f5ff55;
+  --primary-a44: #00f5ff44;
+  --primary-a22: #00f5ff22;
+  --secondary-a66: #bf00ff66;
+}
+
+[data-theme="light"] {
+  --bg: #f0f4ff;
+  --surface: #ffffff;
+  --primary: #2563eb;
+  --secondary: #7c3aed;
+  --text: #1e293b;
+  --text-dim: #64748b;
+  --glow-primary: 0 0 6px #2563eb66;
+  --glow-secondary: 0 0 6px #7c3aed66;
+  --primary-a55: #2563eb55;
+  --primary-a44: #2563eb44;
+  --primary-a22: #2563eb22;
+  --secondary-a66: #7c3aed66;
+}
+
+/* ── Base ────────────────────────────────────────────────────────────────── */
+
+body {
+  font-family: 'Orbitron', 'Share Tech Mono', monospace;
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* ── App layout ──────────────────────────────────────────────────────────── */
+
+.app-wrapper {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 420px;
+  margin-bottom: 16px;
+}
+
+.app-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: var(--primary);
+  text-shadow: var(--glow-primary);
+}
+
+/* ── Icon buttons (theme/mode toggles) ───────────────────────────────────── */
+
+.icon-btn {
+  background: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  text-shadow: var(--glow-primary);
+  box-shadow: var(--glow-primary);
+  transition: background 0.2s, color 0.2s;
+}
+
+.icon-btn:hover {
+  background: var(--primary);
+  color: var(--bg);
+}
+
+/* ── Calculator card ─────────────────────────────────────────────────────── */
+
+.calculator {
+  background: var(--surface);
+  border: 1px solid var(--primary);
+  border-radius: 12px;
+  padding: 20px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--glow-primary);
+}
+
+/* ── Display ─────────────────────────────────────────────────────────────── */
+
+.display {
+  background: #00000033;
+  border: 1px solid var(--primary-a55);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  text-align: right;
+}
+
+.display-expression {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  min-height: 1.2em;
+  letter-spacing: 0.1em;
+}
+
+.display-value {
+  font-size: 2rem;
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--primary);
+  text-shadow: var(--glow-primary);
+  word-break: break-all;
+}
+
+/* ── Button grid ─────────────────────────────────────────────────────────── */
+
+.btn-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.btn {
+  background: var(--surface);
+  border: 1px solid var(--primary-a44);
+  color: var(--text);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1rem;
+  padding: 16px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: var(--glow-primary);
+}
+
+.btn.operator {
+  border-color: var(--secondary-a66);
+  color: var(--secondary);
+}
+
+.btn.operator:hover {
+  border-color: var(--secondary);
+  box-shadow: var(--glow-secondary);
+}
+
+.btn.equals {
+  background: var(--primary-a22);
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: var(--glow-primary);
+}
+
+.btn.equals:hover {
+  background: var(--primary);
+  color: var(--bg);
+}
+
+.btn.clear {
+  color: #ff4d6d;
+  border-color: #ff4d6d44;
+}
+
+.btn.clear:hover {
+  border-color: #ff4d6d;
+  box-shadow: 0 0 10px #ff4d6d;
+}
+
+.btn.span2 {
+  grid-column: span 2;
+}
+
+.btn.selected {
+  background: var(--primary-a22);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* ── Tip Calculator ──────────────────────────────────────────────────────── */
+
+.tip-calc {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tip-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tip-field label {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.tip-field input {
+  background: #00000033;
+  border: 1px solid var(--primary-a44);
+  border-radius: 6px;
+  padding: 10px 14px;
+  color: var(--primary);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+
+.tip-field input:focus {
+  border-color: var(--primary);
+  box-shadow: var(--glow-primary);
+}
+
+.tip-field input::placeholder {
+  color: var(--text-dim);
+}
+
+.tip-field input[type="number"]::-webkit-inner-spin-button,
+.tip-field input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+.tip-field input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.tip-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.tip-presets .btn {
+  padding: 8px 10px;
+  font-size: 0.75rem;
+  flex: 1;
+  min-width: 44px;
+}
+
+.tip-results {
+  border: 1px solid var(--secondary-a66);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--glow-secondary);
+}
+
+.tip-result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+}
+
+.tip-result-row span:last-child {
+  color: var(--secondary);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1rem;
+  text-shadow: var(--glow-secondary);
+}
+
+.tip-result-highlight {
+  border-top: 1px solid var(--secondary-a66);
+  padding-top: 10px;
+  font-size: 0.8rem;
+}
+
+.tip-result-highlight span:last-child {
+  color: var(--primary);
+  font-size: 1.25rem;
+  text-shadow: var(--glow-primary);
+}
