@@ -264,6 +264,7 @@ body {
   flex-wrap: wrap;
   gap: 6px;
   margin-top: 2px;
+  margin-bottom: 6px;
 }
 
 .tip-presets .btn {
@@ -271,6 +272,12 @@ body {
   font-size: 0.75rem;
   flex: 1;
   min-width: 44px;
+}
+
+.tip-warning {
+  color: #ff6b6b;
+  font-size: 0.7rem;
+  margin-top: 4px;
 }
 
 .tip-results {
