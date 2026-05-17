@@ -32,8 +32,12 @@ export default function Calculator() {
   const [operand, setOperand] = useState(null)
   const [waitingForOperand, setWaitingForOperand] = useState(false)
 
+  const isPostResult = () =>
+    waitingForOperand && operator === null && operand === null
+
   const handleDigit = (digit) => {
     if (waitingForOperand) {
+      if (isPostResult()) setExpression('')
       setDisplay(digit)
       setWaitingForOperand(false)
     } else {
@@ -43,6 +47,7 @@ export default function Calculator() {
 
   const handleDecimal = () => {
     if (waitingForOperand) {
+      if (isPostResult()) setExpression('')
       setDisplay('0.')
       setWaitingForOperand(false)
       return
