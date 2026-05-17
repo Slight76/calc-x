@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
-const PRESETS = [10, 15, 18, 20, 25]
+const PRESETS = [15, 18, 20, 25]
+const MIN_TIP = 15
 
 export default function TipCalculator() {
   const [bill, setBill] = useState('')
@@ -33,14 +34,6 @@ export default function TipCalculator() {
 
       <div className="tip-field">
         <label>TIP %</label>
-        <input
-          type="number"
-          min="0"
-          max="100"
-          value={tip}
-          onChange={(e) => setTip(e.target.value)}
-          placeholder="0"
-        />
         <div className="tip-presets">
           {PRESETS.map((p) => (
             <button
@@ -52,6 +45,19 @@ export default function TipCalculator() {
             </button>
           ))}
         </div>
+        <input
+          type="number"
+          min={MIN_TIP}
+          max="100"
+          step="0.1"
+          value={tip}
+          onChange={(e) => setTip(e.target.value)}
+          placeholder={`Custom (min ${MIN_TIP}%)`}
+          aria-label="Custom tip percentage"
+        />
+        {tip !== '' && tipNum < MIN_TIP && (
+          <div className="tip-warning">Minimum tip is {MIN_TIP}%</div>
+        )}
       </div>
 
       <div className="tip-field">

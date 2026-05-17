@@ -10,7 +10,7 @@
 |---|---|
 | 🔢 Standard Calculator | Full arithmetic — add, subtract, multiply, divide, sign toggle, percentage |
 | ⌨️ Keyboard Input | Drive the calculator from the keyboard: `0-9`, `.`, `+`, `-`, `*`, `/`, `Enter`/`=`, `Escape` (clear), `Backspace` |
-| 💵 Tip Calculator | Split bills with preset tip options: 10%, 15%, 18%, 20%, 25% |
+| 💵 Tip Calculator | Split bills with preset tips (15%, 18%, 20%, 25%) plus a custom percentage input (15% minimum) |
 | 🌗 Dark / Light Theme | Neon cyberpunk dark mode + clean electric-blue light mode |
 | 🔤 Futuristic Fonts | Orbitron & Share Tech Mono for that sci-fi aesthetic |
 | ⚡ Zero Backend | 100% client-side — no server, no API, no dependencies beyond React |
