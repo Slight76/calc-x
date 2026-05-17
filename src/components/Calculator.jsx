@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 function calculate(a, op, b) {
   switch (op) {
@@ -31,20 +31,32 @@ export default function Calculator() {
   const [operator, setOperator] = useState(null)
   const [operand, setOperand] = useState(null)
   const [waitingForOperand, setWaitingForOperand] = useState(false)
+  const [lastOperator, setLastOperator] = useState(null)
+  const [lastOperand, setLastOperand] = useState(null)
+
+  const isPostResult = () =>
+    waitingForOperand && operator === null && operand === null
 
   const handleDigit = (digit) => {
     if (waitingForOperand) {
+      if (isPostResult()) setExpression('')
       setDisplay(digit)
       setWaitingForOperand(false)
+      setLastOperator(null)
+      setLastOperand(null)
     } else {
+      if (display.replace('-', '').replace('.', '').length >= 12) return
       setDisplay(display === '0' ? digit : display + digit)
     }
   }
 
   const handleDecimal = () => {
     if (waitingForOperand) {
+      if (isPostResult()) setExpression('')
       setDisplay('0.')
       setWaitingForOperand(false)
+      setLastOperator(null)
+      setLastOperand(null)
       return
     }
     if (!display.includes('.')) {
@@ -66,18 +78,41 @@ export default function Calculator() {
     }
     setOperator(op)
     setWaitingForOperand(true)
+    setLastOperator(null)
+    setLastOperand(null)
   }
 
   const handleEquals = () => {
-    if (operator === null || operand === null) return
-    const current = parseFloat(display)
-    const result = calculate(operand, operator, current)
-    const rs = result === 'Error' ? 'Error' : formatNum(result)
-    setExpression(formatNum(operand) + ' ' + opSymbol(operator) + ' ' + display + ' =')
-    setDisplay(rs)
-    setOperand(null)
-    setOperator(null)
-    setWaitingForOperand(true)
+    if (operator !== null && operand !== null) {
+      const current = parseFloat(display)
+      const result = calculate(operand, operator, current)
+      const rs = result === 'Error' ? 'Error' : formatNum(result)
+      setExpression(formatNum(operand) + ' ' + opSymbol(operator) + ' ' + display + ' =')
+      setDisplay(rs)
+      setOperand(null)
+      setOperator(null)
+      setWaitingForOperand(true)
+      if (rs !== 'Error') {
+        setLastOperator(operator)
+        setLastOperand(current)
+      } else {
+        setLastOperator(null)
+        setLastOperand(null)
+      }
+      return
+    }
+    if (lastOperator !== null && lastOperand !== null && display !== 'Error') {
+      const current = parseFloat(display)
+      const result = calculate(current, lastOperator, lastOperand)
+      const rs = result === 'Error' ? 'Error' : formatNum(result)
+      setExpression(display + ' ' + opSymbol(lastOperator) + ' ' + formatNum(lastOperand) + ' =')
+      setDisplay(rs)
+      setWaitingForOperand(true)
+      if (rs === 'Error') {
+        setLastOperator(null)
+        setLastOperand(null)
+      }
+    }
   }
 
   const handleClear = () => {
@@ -86,17 +121,63 @@ export default function Calculator() {
     setOperator(null)
     setOperand(null)
     setWaitingForOperand(false)
+    setLastOperator(null)
+    setLastOperand(null)
   }
 
   const handleSign = () => {
     if (display === '0' || display === 'Error') return
     setDisplay(display.startsWith('-') ? display.slice(1) : '-' + display)
+    setWaitingForOperand(true)
   }
 
   const handlePercent = () => {
     if (display === 'Error') return
     setDisplay(formatNum(parseFloat(display) / 100))
+    setWaitingForOperand(true)
   }
+
+  const handleBackspace = () => {
+    if (waitingForOperand || display === 'Error') return
+    if (display.length <= 1 || (display.length === 2 && display.startsWith('-'))) {
+      setDisplay('0')
+    } else {
+      setDisplay(display.slice(0, -1))
+    }
+  }
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      const { key } = e
+      const active = document.activeElement
+      const isButton = active && active.tagName === 'BUTTON'
+      // Enter would otherwise also re-click the focused on-screen button.
+      if ((key === 'Enter' || key === ' ') && isButton) {
+        active.blur()
+      }
+      if (key >= '0' && key <= '9') {
+        e.preventDefault()
+        handleDigit(key)
+      } else if (key === '.') {
+        e.preventDefault()
+        handleDecimal()
+      } else if (key === '+' || key === '-' || key === '*' || key === '/') {
+        e.preventDefault()
+        handleOperator(key)
+      } else if (key === 'Enter' || key === '=') {
+        e.preventDefault()
+        handleEquals()
+      } else if (key === 'Escape') {
+        e.preventDefault()
+        handleClear()
+      } else if (key === 'Backspace') {
+        e.preventDefault()
+        handleBackspace()
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  })
 
   const buttons = [
     { label: 'AC',  action: handleClear,               cls: 'btn clear' },

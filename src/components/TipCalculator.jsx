@@ -8,8 +8,8 @@ export default function TipCalculator() {
   const [tip, setTip] = useState('')
   const [people, setPeople] = useState('1')
 
-  const billNum = parseFloat(bill) || 0
-  const tipNum = parseFloat(tip) || 0
+  const billNum = Math.max(0, parseFloat(bill) || 0)
+  const tipNum = Math.max(0, parseFloat(tip) || 0)
   const peopleNum = Math.max(1, parseInt(people) || 1)
 
   const tipAmount = billNum * (tipNum / 100)
