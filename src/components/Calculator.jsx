@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 function calculate(a, op, b) {
   switch (op) {
@@ -97,6 +97,42 @@ export default function Calculator() {
     if (display === 'Error') return
     setDisplay(formatNum(parseFloat(display) / 100))
   }
+
+  const handleBackspace = () => {
+    if (waitingForOperand || display === 'Error') return
+    if (display.length <= 1 || (display.length === 2 && display.startsWith('-'))) {
+      setDisplay('0')
+    } else {
+      setDisplay(display.slice(0, -1))
+    }
+  }
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      const { key } = e
+      if (key >= '0' && key <= '9') {
+        e.preventDefault()
+        handleDigit(key)
+      } else if (key === '.') {
+        e.preventDefault()
+        handleDecimal()
+      } else if (key === '+' || key === '-' || key === '*' || key === '/') {
+        e.preventDefault()
+        handleOperator(key)
+      } else if (key === 'Enter' || key === '=') {
+        e.preventDefault()
+        handleEquals()
+      } else if (key === 'Escape') {
+        e.preventDefault()
+        handleClear()
+      } else if (key === 'Backspace') {
+        e.preventDefault()
+        handleBackspace()
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  })
 
   const buttons = [
     { label: 'AC',  action: handleClear,               cls: 'btn clear' },
