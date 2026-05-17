@@ -31,11 +31,15 @@ export default function Calculator() {
   const [operator, setOperator] = useState(null)
   const [operand, setOperand] = useState(null)
   const [waitingForOperand, setWaitingForOperand] = useState(false)
+  const [lastOperator, setLastOperator] = useState(null)
+  const [lastOperand, setLastOperand] = useState(null)
 
   const handleDigit = (digit) => {
     if (waitingForOperand) {
       setDisplay(digit)
       setWaitingForOperand(false)
+      setLastOperator(null)
+      setLastOperand(null)
     } else {
       setDisplay(display === '0' ? digit : display + digit)
     }
@@ -45,6 +49,8 @@ export default function Calculator() {
     if (waitingForOperand) {
       setDisplay('0.')
       setWaitingForOperand(false)
+      setLastOperator(null)
+      setLastOperand(null)
       return
     }
     if (!display.includes('.')) {
@@ -66,18 +72,41 @@ export default function Calculator() {
     }
     setOperator(op)
     setWaitingForOperand(true)
+    setLastOperator(null)
+    setLastOperand(null)
   }
 
   const handleEquals = () => {
-    if (operator === null || operand === null) return
-    const current = parseFloat(display)
-    const result = calculate(operand, operator, current)
-    const rs = result === 'Error' ? 'Error' : formatNum(result)
-    setExpression(formatNum(operand) + ' ' + opSymbol(operator) + ' ' + display + ' =')
-    setDisplay(rs)
-    setOperand(null)
-    setOperator(null)
-    setWaitingForOperand(true)
+    if (operator !== null && operand !== null) {
+      const current = parseFloat(display)
+      const result = calculate(operand, operator, current)
+      const rs = result === 'Error' ? 'Error' : formatNum(result)
+      setExpression(formatNum(operand) + ' ' + opSymbol(operator) + ' ' + display + ' =')
+      setDisplay(rs)
+      setOperand(null)
+      setOperator(null)
+      setWaitingForOperand(true)
+      if (rs !== 'Error') {
+        setLastOperator(operator)
+        setLastOperand(current)
+      } else {
+        setLastOperator(null)
+        setLastOperand(null)
+      }
+      return
+    }
+    if (lastOperator !== null && lastOperand !== null && display !== 'Error') {
+      const current = parseFloat(display)
+      const result = calculate(current, lastOperator, lastOperand)
+      const rs = result === 'Error' ? 'Error' : formatNum(result)
+      setExpression(display + ' ' + opSymbol(lastOperator) + ' ' + formatNum(lastOperand) + ' =')
+      setDisplay(rs)
+      setWaitingForOperand(true)
+      if (rs === 'Error') {
+        setLastOperator(null)
+        setLastOperand(null)
+      }
+    }
   }
 
   const handleClear = () => {
@@ -86,6 +115,8 @@ export default function Calculator() {
     setOperator(null)
     setOperand(null)
     setWaitingForOperand(false)
+    setLastOperator(null)
+    setLastOperand(null)
   }
 
   const handleSign = () => {
