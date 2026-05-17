@@ -110,6 +110,12 @@ export default function Calculator() {
   useEffect(() => {
     const onKeyDown = (e) => {
       const { key } = e
+      const active = document.activeElement
+      const isButton = active && active.tagName === 'BUTTON'
+      // Enter would otherwise also re-click the focused on-screen button.
+      if ((key === 'Enter' || key === ' ') && isButton) {
+        active.blur()
+      }
       if (key >= '0' && key <= '9') {
         e.preventDefault()
         handleDigit(key)
