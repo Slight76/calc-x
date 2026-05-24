@@ -108,7 +108,7 @@ export default function Calculator() {
       const current = parseFloat(display)
       const result = calculate(current, lastOperator, lastOperand)
       const rs = result === 'Error' ? 'Error' : formatNum(result)
-      const expression = formatNum(operand) + ' ' + opSymbol(operator) + ' ' + display + ' =';
+      const expression = display + ' ' + opSymbol(lastOperator) + ' ' + formatNum(lastOperand) + ' =';
       setExpression(expression)
       setDisplay(rs)
       addToHistory(expression, rs)
