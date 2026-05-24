@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { addToHistory } from './History'
 
 function calculate(a, op, b) {
   switch (op) {
@@ -87,8 +88,10 @@ export default function Calculator() {
       const current = parseFloat(display)
       const result = calculate(operand, operator, current)
       const rs = result === 'Error' ? 'Error' : formatNum(result)
-      setExpression(formatNum(operand) + ' ' + opSymbol(operator) + ' ' + display + ' =')
+      const expression = formatNum(operand) + ' ' + opSymbol(operator) + ' ' + display + ' =';
+      setExpression(expression)
       setDisplay(rs)
+      addToHistory(expression, rs)
       setOperand(null)
       setOperator(null)
       setWaitingForOperand(true)
@@ -105,8 +108,10 @@ export default function Calculator() {
       const current = parseFloat(display)
       const result = calculate(current, lastOperator, lastOperand)
       const rs = result === 'Error' ? 'Error' : formatNum(result)
-      setExpression(display + ' ' + opSymbol(lastOperator) + ' ' + formatNum(lastOperand) + ' =')
+      const expression = display + ' ' + opSymbol(lastOperator) + ' ' + formatNum(lastOperand) + ' =';
+      setExpression(expression)
       setDisplay(rs)
+      addToHistory(expression, rs)
       setWaitingForOperand(true)
       if (rs === 'Error') {
         setLastOperator(null)
