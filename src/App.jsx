@@ -3,6 +3,7 @@ import Calculator from './components/Calculator'
 import TipCalculator from './components/TipCalculator'
 import ThemeToggle from './components/ThemeToggle'
 import ModeToggle from './components/ModeToggle'
+import History from './components/History'
 
 export default function App() {
   const [theme, setTheme] = useState('dark')
@@ -24,6 +25,10 @@ export default function App() {
         </div>
       </header>
       {mode === 'calculator' ? <Calculator /> : <TipCalculator />}
+
+      <footer className='app-footer'>
+        <History />
+      </footer>
     </div>
   )
 }

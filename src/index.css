@@ -94,6 +94,12 @@ body {
   text-shadow: var(--glow-primary);
 }
 
+.app-footer {
+  width: 100%;
+  max-width: 420px;
+  margin-top: 16px;
+}
+
 /* ── Icon buttons (theme/mode toggles) ───────────────────────────────────── */
 
 .icon-btn {
@@ -365,4 +371,28 @@ body {
   color: var(--primary);
   font-size: 1.25rem;
   text-shadow: var(--glow-primary);
+}
+
+/* ── Tip Calculator ──────────────────────────────────────────────────────── */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+
+  width: 320px;
+  max-width: 90vw;
+  height: 100vh;
+  padding: 16px;
+
+  background: var(--bg);
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.2);
+
+  z-index: 10;
 }
